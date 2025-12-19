@@ -172,31 +172,30 @@ function generateFinalCanvas() {
     // B. Header Logo
     drawLogoPicLoop(ctx, finalCanvas.width / 2, 110, 110);
 
-    // C. Data Stiker - KOORDINAT YANG TEPAT (overlap dengan border foto)
+    // C. Data Stiker - Sesuai gambar terakhir yang dikirim
     const stickerData = [
-        // Foto 1: Bintang di pojok kiri atas (overlap)
+        // Foto 1: Bintang kiri atas, Rainbow kanan bawah
         { 
             stickers: [
-                { emoji: "⭐", x: padding - 20, y: -20, size: 100 }
+                { emoji: "⭐", x: padding + 30, y: 30, size: 100 },
+                { emoji: "🌈", x: imgW + padding - 50, y: imgH - 50, size: 110 }
             ]
         },
-        // Foto 2: Hati kanan atas, Sparkle+Bintang kiri bawah, Rainbow kanan bawah
+        // Foto 2: Hati ganda kanan atas, Hati+Bintang kiri bawah
         { 
             stickers: [
-                { emoji: "💕", x: imgW + padding + 15, y: -15, size: 85 },
-                { emoji: "💖", x: imgW + padding + 35, y: 5, size: 70 },
-                { emoji: "✨", x: padding - 30, y: imgH + 10, size: 65 },
-                { emoji: "⭐", x: padding - 5, y: imgH + 30, size: 80 },
-                { emoji: "🌈", x: imgW + padding + 10, y: imgH + 5, size: 95 }
+                { emoji: "💕", x: imgW + padding - 40, y: 30, size: 90 },
+                { emoji: "💖", x: imgW + padding - 65, y: 55, size: 80 },
+                { emoji: "💕", x: padding + 30, y: imgH - 60, size: 95 },
+                { emoji: "⭐", x: padding + 50, y: imgH - 35, size: 70 }
             ]
         },
-        // Foto 3: Bintang+Sparkle kiri atas, Pita kanan atas, Rainbow kanan bawah  
+        // Foto 3: Bintang+Sparkle kiri bawah, Pita kanan atas
         { 
             stickers: [
-                { emoji: "⭐", x: padding - 25, y: -25, size: 90 },
-                { emoji: "✨", x: padding + 5, y: -5, size: 65 },
-                { emoji: "🎀", x: imgW + padding + 15, y: -15, size: 85 },
-                { emoji: "🌈", x: imgW + padding + 10, y: imgH + 5, size: 95 }
+                { emoji: "⭐", x: padding + 35, y: imgH - 65, size: 100 },
+                { emoji: "✨", x: padding + 60, y: imgH - 40, size: 65 },
+                { emoji: "🎀", x: imgW + padding - 50, y: 40, size: 95 }
             ]
         }
     ];
