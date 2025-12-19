@@ -1,0 +1,222 @@
+/* ============================================
+   RESET & GLOBAL STYLES
+   ============================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif;
+    background: linear-gradient(135deg, #ff6b9d 0%, #c94b8b 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px; /* Dikecilkan */
+}
+
+/* ============================================
+   CONTAINER UTAMA
+   ============================================ */
+.container {
+    max-width: 900px; /* Dikecilkan dari 1100px */
+    width: 100%;
+    background: white;
+    border-radius: 20px;
+    padding: 20px; /* Dikecilkan dari 30px */
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+h1 {
+    text-align: center;
+    color: #ff1493;
+    margin-bottom: 20px; /* Dikecilkan */
+    font-size: 2.2em;    /* Dikecilkan dari 3em */
+    letter-spacing: 5px;
+    text-shadow: 3px 3px 0px #ffd700, 6px 6px 0px #ff69b4;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+/* ============================================
+   LAYOUT UTAMA
+   ============================================ */
+.main-layout {
+    display: flex;
+    gap: 20px; /* Dikecilkan dari 30px */
+    align-items: flex-start;
+    justify-content: center;
+}
+
+/* ============================================
+   BAGIAN KAMERA
+   ============================================ */
+.camera-section {
+    flex: 2; /* Disesuaikan agar lebih proporsional */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#video {
+    width: 100%;
+    max-width: 500px; /* Dikecilkan dari 650px agar area bawah terlihat */
+    aspect-ratio: 4 / 3;
+    height: auto;
+    object-fit: cover;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(255, 20, 147, 0.5);
+    transform: scaleX(-1);
+    border: 6px solid #ff1493; /* Tipis dikit agar elegan */
+    margin-bottom: 5px;
+    background: black;
+}
+
+.countdown {
+    font-size: 80px; /* Dikecilkan dari 100px */
+    font-weight: bold;
+    color: #ffd700;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-shadow: 4px 4px 0px #ff1493, 8px 8px 0px #ff69b4;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.status {
+    text-align: center;
+    color: #ff1493;
+    font-size: 16px; /* Dikecilkan dari 20px */
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+/* ============================================
+   TOMBOL
+   ============================================ */
+.controls {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+button {
+    padding: 12px 25px; /* Dikecilkan dari 18px 35px */
+    font-size: 15px;    /* Dikecilkan dari 18px */
+    font-weight: bold;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    box-shadow: 0 5px 15px rgba(0,0,0,.2);
+    font-family: 'Comic Sans MS', sans-serif;
+}
+
+.btn-start { background: linear-gradient(135deg, #ff6b9d, #ff1493); color: white; }
+.btn-restart { background: linear-gradient(135deg, #ffd700, #ffa500); color: white; }
+.btn-download { background: linear-gradient(135deg, #ff69b4, #ff1493); color: white; }
+
+button:hover:not(:disabled) {
+    transform: translateY(-3px) scale(1.05);
+}
+
+button:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}
+
+/* ============================================
+   GRID FOTO
+   ============================================ */
+.photo-grid {
+    flex: 0.8; /* Dikecilkan lebarnya */
+    max-width: 250px; /* Dikecilkan dari 360px */
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(3, 1fr);
+    gap: 12px;
+    padding: 15px;
+    background: repeating-linear-gradient(45deg, #ff6b9d, #ff6b9d 15px, #ff8bb5 15px, #ff8bb5 30px);
+    border-radius: 15px;
+    box-shadow: 0 15px 40px rgba(255, 20, 147, 0.4);
+}
+
+.photo-slot {
+    aspect-ratio: 4 / 3;
+    background: white;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border: 4px solid white;
+    box-shadow: 0 8px 20px rgba(0,0,0,.2), inset 0 0 0 2px #ff69b4;
+}
+
+.photo-slot img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.slot-number {
+    font-size: 32px; /* Dikecilkan */
+    color: #ffb3d9;
+    font-weight: bold;
+}
+
+.photo-slot.filled .slot-number { display: none; }
+
+/* ============================================
+   STICKER
+   ============================================ */
+.photo-slot::before,
+.photo-slot::after {
+    position: absolute;
+    font-size: 30px; /* Dikecilkan dari 40px */
+    pointer-events: none;
+    animation: float 3s ease-in-out infinite;
+    z-index: 5;
+}
+
+@keyframes float {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* Posisi sticker disesuaikan sedikit karena ukuran slot mengecil */
+.photo-slot[data-number="1"]::before { content:"⭐"; top:-10px; left:-10px; }
+.photo-slot[data-number="2"]::before { content:"💕"; top:-10px; right:-10px; }
+.photo-slot[data-number="3"]::before { content:"✨"; bottom:-10px; left:-10px; }
+.photo-slot[data-number="1"]::after { content:"🌈"; bottom:-8px; right:-8px; }
+.photo-slot[data-number="2"]::after { content:"💖"; bottom:-8px; left:-8px; }
+.photo-slot[data-number="3"]::after { content:"🎀"; top:-8px; right:-8px; }
+
+#captureCanvas, #finalCanvas { display: none; }
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+    .main-layout { flex-direction: column; align-items: center; }
+    #video { max-width: 100%; }
+    .photo-grid { max-width: 100%; }
+    .countdown { font-size: 60px; }
+    h1 { font-size: 1.8em; }
+}
