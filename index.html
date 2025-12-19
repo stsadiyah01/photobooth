@@ -3,53 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PicLoop Photobooth</title>
+    <title>PicLoop - Photo Booth Fun</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <h1>PicLoop</h1>
-
-        <!-- WRAPPER LAYOUT SAMPING -->
         <div class="main-layout">
-
-            <!-- BAGIAN KAMERA -->
-            <div class="camera-section">
+            <section class="camera-section">
                 <video id="video" autoplay playsinline></video>
-
-                <div class="countdown" id="countdown"></div>
-                <p class="status" id="status">
-                    Klik "Mulai Sesi Foto" untuk memulai
-                </p>
-
-                <!-- TOMBOL KONTROL -->
+                <div id="countdown" class="countdown"></div>
+                <div id="status" class="status"></div>
                 <div class="controls">
-                    <button class="btn-start" id="startBtn">Mulai Sesi Foto</button>
-                    <button class="btn-restart" id="restartBtn">Ulangi</button>
-                    <button class="btn-download" id="downloadBtn">Download</button>
+                    <button id="startBtn" class="btn-start">Mulai</button>
+                    <button id="restartBtn" class="btn-restart">Ulangi</button>
+                    <button id="downloadBtn" class="btn-download" disabled>Download</button>
                 </div>
-            </div>
-
-            <!-- GRID FOTO -->
-            <div class="photo-grid" id="photoGrid">
-                <div class="photo-slot" data-number="1">
-                    <span class="slot-number">1</span>
-                </div>
-                <div class="photo-slot" data-number="2">
-                    <span class="slot-number">2</span>
-                </div>
-                <div class="photo-slot" data-number="3">
-                    <span class="slot-number">3</span>
-                </div>
-            </div>
-
+            </section>
+            <section class="photo-grid">
+                <div class="photo-slot" data-number="1"></div>
+                <div class="photo-slot" data-number="2"></div>
+                <div class="photo-slot" data-number="3"></div>
+            </section>
         </div>
-
-        <!-- CANVAS (TERSEMBUNYI) -->
-        <canvas id="captureCanvas"></canvas>
-        <canvas id="finalCanvas"></canvas>
-
     </div>
+
+    <canvas id="captureCanvas" style="display: none;"></canvas>
+    <canvas id="finalCanvas" style="display: none;"></canvas>
 
     <script src="script.js"></script>
 </body>

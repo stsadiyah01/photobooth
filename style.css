@@ -21,27 +21,36 @@ body {
     CONTAINER UTAMA
    ============================================ */
 .container {
-    max-width: 900px;
+    max-width: 950px;
     width: 100%;
     background: white;
-    border-radius: 20px;
-    padding: 20px;
+    border-radius: 25px;
+    padding: 25px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 }
 
+/* Mengikuti gaya Logo PicLoop (Pink, Outline Putih & Kuning, Shadow) */
 h1 {
     text-align: center;
-    color: #ff1493;
-    margin-bottom: 20px;
-    font-size: 2.2em;
-    letter-spacing: 5px;
-    text-shadow: 3px 3px 0px #ffd700, 6px 6px 0px #ff69b4;
+    color: #ff1493; /* Warna Pink Utama */
+    margin-bottom: 25px;
+    font-size: 3.5em;
+    letter-spacing: 2px;
+    font-family: 'Bangers', cursive;
+    /* Layered Shadow untuk simulasi Outline Kuning & Putih */
+    text-shadow: 
+        3px 3px 0 #fff, 
+        -3px -3px 0 #fff, 
+        3px -3px 0 #fff, 
+        -3px 3px 0 #fff,
+        5px 5px 0 #ffd700, 
+        8px 8px 15px rgba(214, 51, 132, 0.5);
     animation: bounce 2s infinite;
 }
 
 @keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-5px); }
+    0%, 100% { transform: translateY(0) rotate(-1deg); }
+    50% { transform: translateY(-10px) rotate(1deg); }
 }
 
 /* ============================================
@@ -49,7 +58,7 @@ h1 {
    ============================================ */
 .main-layout {
     display: flex;
-    gap: 20px;
+    gap: 30px;
     align-items: flex-start;
     justify-content: center;
 }
@@ -58,50 +67,42 @@ h1 {
     BAGIAN KAMERA
    ============================================ */
 .camera-section {
-    flex: 2;
+    flex: 1.6;
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%; /* Penting untuk mobile */
+    width: 100%;
 }
 
 #video {
     width: 100%;
-    max-width: 500px;
+    max-width: 550px;
     aspect-ratio: 4 / 3;
-    height: auto;
-    object-fit: cover; /* Mencegah muka gepeng */
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(255, 20, 147, 0.5);
+    object-fit: cover;
+    border-radius: 25px;
+    box-shadow: 0 15px 35px rgba(255, 20, 147, 0.4);
     transform: scaleX(-1);
-    border: 6px solid #ff1493;
-    margin-bottom: 5px;
-    background: black;
+    border: 10px solid #ff1493;
+    margin-bottom: 15px;
+    background: #000;
 }
 
 .countdown {
-    font-size: 80px;
+    font-size: 100px;
     font-weight: bold;
     color: #ffd700;
-    min-height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    min-height: 110px;
     text-shadow: 4px 4px 0px #ff1493, 8px 8px 0px #ff69b4;
-    animation: pulse 1s infinite;
-}
-
-@keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.1); }
 }
 
 .status {
-    text-align: center;
     color: #ff1493;
-    font-size: 16px;
-    margin-bottom: 8px;
+    font-size: 18px;
+    margin-bottom: 15px;
     font-weight: bold;
+    background: #fff0f6;
+    padding: 5px 20px;
+    border-radius: 20px;
 }
 
 /* ============================================
@@ -109,22 +110,21 @@ h1 {
    ============================================ */
 .controls {
     display: flex;
-    gap: 12px;
+    gap: 15px;
     justify-content: center;
     flex-wrap: wrap;
-    margin-top: 10px;
 }
 
 button {
-    padding: 12px 25px;
-    font-size: 14px;
+    padding: 15px 35px;
+    font-size: 16px;
     font-weight: bold;
     border: none;
     border-radius: 50px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     text-transform: uppercase;
-    box-shadow: 0 5px 15px rgba(0,0,0,.2);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
     font-family: 'Comic Sans MS', sans-serif;
 }
 
@@ -132,105 +132,95 @@ button {
 .btn-restart { background: linear-gradient(135deg, #ffd700, #ffa500); color: white; }
 .btn-download { background: linear-gradient(135deg, #ff69b4, #ff1493); color: white; }
 
-button:hover:not(:disabled) { transform: translateY(-3px) scale(1.05); }
-button:disabled { opacity: .5; cursor: not-allowed; }
+button:hover:not(:disabled) { transform: translateY(-5px) scale(1.05); box-shadow: 0 12px 20px rgba(0,0,0,0.2); }
+button:active { transform: translateY(0); }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* ============================================
-    GRID FOTO (CEGAH GEPENG DI HP)
+    GRID FOTO (STRIP PREVIEW)
    ============================================ */
 .photo-grid {
-    flex: 0.8;
+    flex: 0.9;
     width: 100%;
-    max-width: 250px; /* Batasi lebar agar tidak melar di mobile */
+    max-width: 300px;
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: repeat(3, 1fr);
-    gap: 12px;
-    padding: 15px;
-    background: repeating-linear-gradient(45deg, #ff6b9d, #ff6b9d 15px, #ff8bb5 15px, #ff8bb5 30px);
-    border-radius: 15px;
-    box-shadow: 0 15px 40px rgba(255, 20, 147, 0.4);
+    gap: 20px;
+    padding: 25px;
+    /* Efek Belang-belang Pink */
+    background: repeating-linear-gradient(
+        45deg,
+        #ff6b9d,
+        #ff6b9d 20px,
+        #ff8bb5 20px,
+        #ff8bb5 40px
+    );
+    border-radius: 25px;
+    box-shadow: 0 15px 45px rgba(255, 20, 147, 0.5);
+    border: 8px solid white;
 }
 
 .photo-slot {
     width: 100%;
-    aspect-ratio: 4 / 3; /* Kunci rasio agar foto tetap kotak/landscape */
+    aspect-ratio: 4 / 3;
     background: white;
-    border-radius: 10px;
+    border-radius: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
-    border: 4px solid white;
-    box-shadow: 0 8px 20px rgba(0,0,0,.2), inset 0 0 0 2px #ff69b4;
-    overflow: hidden; /* Pastikan foto tidak keluar kotak */
+    border: 6px solid white;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    overflow: visible; /* Penting agar stiker bisa keluar bingkai */
 }
 
 .photo-slot img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Pastikan foto terisi penuh tanpa gepeng */
-    border-radius: 6px;
+    object-fit: cover;
+    border-radius: 10px;
 }
-
-.slot-number {
-    font-size: 32px;
-    color: #ffb3d9;
-    font-weight: bold;
-}
-
-.photo-slot.filled .slot-number { display: none; }
 
 /* ============================================
-    STICKER
+    STICKER PREVIEW (Gaya Stiker Timbul)
    ============================================ */
 .photo-slot::before,
 .photo-slot::after {
     position: absolute;
-    font-size: 25px;
+    font-size: 50px; /* Ukuran icon diperbesar */
+    z-index: 10;
     pointer-events: none;
-    animation: float 3s ease-in-out infinite;
-    z-index: 5;
+    /* Memberikan outline putih dan shadow agar seperti stiker asli */
+    filter: 
+        drop-shadow(2px 2px 0 white) 
+        drop-shadow(-2px -2px 0 white)
+        drop-shadow(4px 4px 10px rgba(0,0,0,0.2));
+    transition: transform 0.3s ease;
 }
 
-@keyframes float {
-    0%,100% { transform: translateY(0); }
-    50% { transform: translateY(-5px); }
+/* Animasi mengambang untuk stiker */
+.photo-slot:hover::before, .photo-slot:hover::after {
+    transform: scale(1.2);
 }
 
-.photo-slot[data-number="1"]::before { content:"⭐"; top:-8px; left:-8px; }
-.photo-slot[data-number="2"]::before { content:"💕"; top:-8px; right:-8px; }
-.photo-slot[data-number="3"]::before { content:"✨"; bottom:-8px; left:-8px; }
-.photo-slot[data-number="1"]::after { content:"🌈"; bottom:-5px; right:-5px; }
-.photo-slot[data-number="2"]::after { content:"💖"; bottom:-5px; left:-5px; }
-.photo-slot[data-number="3"]::after { content:"🎀"; top:-5px; right:-5px; }
+/* Penyesuaian Posisi Sticker */
+.photo-slot[data-number="1"]::before { content: "⭐"; top: -20px; left: -20px; }
+.photo-slot[data-number="1"]::after { content: "🌈"; bottom: -15px; right: -25px; font-size: 60px; }
 
-#captureCanvas, #finalCanvas { display: none; }
+.photo-slot[data-number="2"]::before { content: "💕"; top: -15px; right: -25px; }
+.photo-slot[data-number="2"]::after { content: "💖"; bottom: -20px; left: -20px; }
+
+.photo-slot[data-number="3"]::before { content: "✨"; bottom: -20px; left: -20px; }
+.photo-slot[data-number="3"]::after { content: "🎀"; top: -20px; right: -20px; }
 
 /* ============================================
-    RESPONSIVE (HP MODE)
+    RESPONSIVE
    ============================================ */
 @media (max-width: 768px) {
-    .main-layout { 
-        flex-direction: column; 
-        align-items: center; 
-        gap: 15px;
-    }
-    
-    .container {
-        padding: 15px;
-    }
-
-    #video { 
-        max-width: 100%; 
-    }
-
-    .photo-grid { 
-        max-width: 280px; /* Menjaga ukuran grid di HP agar tetap proporsional */
-        margin-top: 10px;
-    }
-
-    .countdown { font-size: 60px; min-height: 60px; }
-    h1 { font-size: 1.6em; }
-    button { padding: 10px 20px; font-size: 13px; }
+    .main-layout { flex-direction: column; align-items: center; }
+    #video { max-width: 100%; border-width: 6px; }
+    .photo-grid { max-width: 320px; margin-top: 20px; padding: 15px; }
+    h1 { font-size: 2.5em; }
+    .photo-slot::before, .photo-slot::after { font-size: 40px; }
 }

@@ -15,27 +15,24 @@ const maxPhotos = 3;
 async function initCamera() {
     try {
         const stream = await navigator.mediaDevices.getUserMedia({ 
-            // Menggunakan ideal agar browser berusaha memberikan rasio terbaik
             video: { width: { ideal: 1280 }, height: { ideal: 960 } }, 
             audio: false 
         });
         video.srcObject = stream;
     } catch (err) {
-        statusEl.innerText = "Kamera tidak aktif atau izin ditolak.";
+        statusEl.innerText = "Kamera tidak aktif.";
     }
 }
 
-// 2. Sesi Foto
+// 2. Sesi Foto Otomatis
 async function startPhotoSession() {
     photos = [];
     startBtn.disabled = true;
     downloadBtn.disabled = true;
     
-    // Reset Grid
     photoSlots.forEach(slot => {
+        slot.innerHTML = '';
         slot.classList.remove('filled');
-        const img = slot.querySelector('img');
-        if (img) img.remove();
     });
 
     for (let i = 0; i < maxPhotos; i++) {
@@ -55,63 +52,110 @@ async function startPhotoSession() {
     downloadBtn.disabled = false;
 }
 
-// 3. Ambil Foto dengan Logika Anti-Gepeng (Crop Tengah)
+// 3. Ambil Foto (Anti-Gepeng)
 function takePhoto(index) {
     const context = captureCanvas.getContext('2d');
-    
-    // Tentukan ukuran target (Rasio 4:3)
-    const targetWidth = 800;
-    const targetHeight = 600;
-    captureCanvas.width = targetWidth;
-    captureCanvas.height = targetHeight;
+    const targetW = 800;
+    const targetH = 600;
+    captureCanvas.width = targetW;
+    captureCanvas.height = targetH;
 
-    const videoW = video.videoWidth;
-    const videoH = video.videoHeight;
-    const targetAspect = targetWidth / targetHeight;
-    const videoAspect = videoW / videoH;
+    const vW = video.videoWidth;
+    const vH = video.videoHeight;
+    const tAspect = targetW / targetH;
+    const vAspect = vW / vH;
 
-    let sourceX = 0, sourceY = 0, sourceW = videoW, sourceH = videoH;
-
-    // Logika CROP: Jika video lebih lebar dari 4:3, potong samping. Jika lebih tinggi, potong atas bawah.
-    if (videoAspect > targetAspect) {
-        sourceW = videoH * targetAspect;
-        sourceX = (videoW - sourceW) / 2;
+    let sx, sy, sW, sH;
+    if (vAspect > tAspect) {
+        sW = vH * tAspect; sH = vH;
+        sx = (vW - sW) / 2; sy = 0;
     } else {
-        sourceH = videoW / targetAspect;
-        sourceY = (videoH - sourceH) / 2;
+        sW = vW; sH = vW / tAspect;
+        sx = 0; sy = (vH - sH) / 2;
     }
 
     context.save();
-    // Efek Mirror agar hasil download searah dengan preview kamera
-    context.translate(targetWidth, 0);
-    context.scale(-1, 1);
-    
-    // DrawImage dengan cropping: (image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
-    context.drawImage(video, sourceX, sourceY, sourceW, sourceH, 0, 0, targetWidth, targetHeight);
+    context.translate(targetW, 0);
+    context.scale(-1, 1); // Mirror
+    context.drawImage(video, sx, sy, sW, sH, 0, 0, targetW, targetH);
     context.restore();
 
     const imageData = captureCanvas.toDataURL('image/png');
     photos.push(imageData);
 
-    // Tampilkan di grid preview
     const img = document.createElement('img');
     img.src = imageData;
     photoSlots[index].appendChild(img);
     photoSlots[index].classList.add('filled');
 }
 
-// 4. Generate Final Result (Sticker & Background)
+// 4. Fungsi Logo PicLoop (Persis gaya CSS h1)
+function drawLogoPicLoop(ctx, x, y, fontSize) {
+    const text = "PicLoop";
+    ctx.font = `bold ${fontSize}px 'Bangers', cursive`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    // Layer 1: Shadow Jauh (Pink Tua)
+    ctx.fillStyle = "rgba(214, 51, 132, 0.5)";
+    ctx.fillText(text, x + 8, y + 8);
+
+    // Layer 2: Outline Kuning
+    ctx.strokeStyle = "#ffd700";
+    ctx.lineWidth = 12;
+    ctx.strokeText(text, x + 5, y + 5);
+
+    // Layer 3: Outline Putih Tebal
+    ctx.strokeStyle = "white";
+    ctx.lineWidth = 18;
+    ctx.lineJoin = "round";
+    ctx.strokeText(text, x, y);
+
+    // Layer 4: Teks Utama Pink
+    ctx.fillStyle = "#ff1493";
+    ctx.fillText(text, x, y);
+}
+
+// 5. Fungsi Stiker Emoji (Samain gaya Drop-Shadow CSS)
+function drawStickerEmoji(ctx, emoji, x, y, size) {
+    ctx.font = `${size}px serif`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    // Simulasi filter: drop-shadow(2px 2px 0 white) drop-shadow(-2px -2px 0 white)
+    ctx.strokeStyle = "white";
+    ctx.lineWidth = 12; // Tebal outline putih
+    ctx.lineJoin = "round";
+    ctx.strokeText(emoji, x, y);
+
+    // Shadow Hitam Lembut (paling bawah)
+    ctx.shadowColor = "rgba(0,0,0,0.2)";
+    ctx.shadowBlur = 10;
+    ctx.shadowOffsetX = 4;
+    ctx.shadowOffsetY = 4;
+
+    // Gambar Emoji Utama
+    ctx.fillText(emoji, x, y);
+
+    // Reset shadow
+    ctx.shadowColor = "transparent";
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
+}
+
+// 6. Logika Download Strip Foto
 function generateFinalCanvas() {
     const ctx = finalCanvas.getContext('2d');
-    const imgW = 600; // Lebar foto di hasil download
-    const imgH = 450; // Tinggi foto di hasil download
-    const padding = 70; 
-    const gap = 80;    
+    const imgW = 600;
+    const imgH = 450;
+    const padding = 80; 
+    const gap = 60;    
     
     finalCanvas.width = imgW + (padding * 2);
-    finalCanvas.height = (imgH * maxPhotos) + (gap * (maxPhotos - 1)) + 300; 
+    finalCanvas.height = 220 + (imgH * maxPhotos) + (gap * (maxPhotos - 1)) + 100; 
 
-    // A. Background Stripes
+    // A. Background Stripes (Samain persis sama CSS photo-grid)
     ctx.fillStyle = "#ff6b9d";
     ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
     
@@ -119,55 +163,70 @@ function generateFinalCanvas() {
     ctx.translate(finalCanvas.width / 2, finalCanvas.height / 2);
     ctx.rotate(45 * Math.PI / 180);
     ctx.fillStyle = "#ff8bb5";
-    const area = Math.max(finalCanvas.width, finalCanvas.height) * 2;
-    for (let i = -area; i < area; i += 50) {
-        ctx.fillRect(i, -area, 25, area * 2);
+    const stripeArea = Math.max(finalCanvas.width, finalCanvas.height) * 2;
+    for (let i = -stripeArea; i < stripeArea; i += 40) { // Gap 40px sesuai CSS
+        ctx.fillRect(i, -stripeArea, 20, stripeArea * 2); // Lebar 20px
     }
     ctx.restore();
 
-    // B. Judul PicLoop 3D Look
-    const centerX = finalCanvas.width / 2;
-    ctx.font = "bold 85px 'Comic Sans MS', cursive";
-    ctx.textAlign = "center";
-    ctx.fillStyle = "#ffd700"; ctx.fillText("PicLoop", centerX + 5, 115);
-    ctx.fillStyle = "#ff1493"; ctx.fillText("PicLoop", centerX + 10, 120);
-    ctx.fillStyle = "white"; ctx.fillText("PicLoop", centerX, 110);
+    // B. Header Logo
+    drawLogoPicLoop(ctx, finalCanvas.width / 2, 110, 110);
 
-    // C. Pengaturan Sticker (Koordinat di dalam area foto)
-    const stickers = [
-        { s1: "⭐", p1: {x: 40, y: 40}, s2: "🌈", p2: {x: imgW - 40, y: imgH - 40} },
-        { s1: "💕", p1: {x: imgW - 40, y: 40}, s2: "💖", p2: {x: 40, y: imgH - 40} },
-        { s1: "✨", p1: {x: 40, y: imgH - 40}, s2: "🎀", p2: {x: imgW - 40, y: 40} }
+    // C. Data Stiker - KOORDINAT YANG TEPAT (overlap dengan border foto)
+    const stickerData = [
+        // Foto 1: Bintang di pojok kiri atas (overlap)
+        { 
+            stickers: [
+                { emoji: "⭐", x: padding - 20, y: -20, size: 100 }
+            ]
+        },
+        // Foto 2: Hati kanan atas, Sparkle+Bintang kiri bawah, Rainbow kanan bawah
+        { 
+            stickers: [
+                { emoji: "💕", x: imgW + padding + 15, y: -15, size: 85 },
+                { emoji: "💖", x: imgW + padding + 35, y: 5, size: 70 },
+                { emoji: "✨", x: padding - 30, y: imgH + 10, size: 65 },
+                { emoji: "⭐", x: padding - 5, y: imgH + 30, size: 80 },
+                { emoji: "🌈", x: imgW + padding + 10, y: imgH + 5, size: 95 }
+            ]
+        },
+        // Foto 3: Bintang+Sparkle kiri atas, Pita kanan atas, Rainbow kanan bawah  
+        { 
+            stickers: [
+                { emoji: "⭐", x: padding - 25, y: -25, size: 90 },
+                { emoji: "✨", x: padding + 5, y: -5, size: 65 },
+                { emoji: "🎀", x: imgW + padding + 15, y: -15, size: 85 },
+                { emoji: "🌈", x: imgW + padding + 10, y: imgH + 5, size: 95 }
+            ]
+        }
     ];
 
     let loaded = 0;
     photos.forEach((src, i) => {
         const img = new Image();
         img.onload = () => {
-            const y = 200 + (i * (imgH + gap));
+            const y = 230 + (i * (imgH + gap));
             
-            // Frame Putih
+            // Bingkai Strip Putih (Border 8px solid white di CSS)
             ctx.fillStyle = "white";
             ctx.beginPath();
-            ctx.roundRect(padding - 15, y - 15, imgW + 30, imgH + 30, 20);
+            ctx.roundRect(padding - 20, y - 20, imgW + 40, imgH + 40, 25);
             ctx.fill();
 
-            // Foto
+            // Foto Rounded
             ctx.save();
             ctx.beginPath();
-            ctx.roundRect(padding, y, imgW, imgH, 15);
+            ctx.roundRect(padding, y, imgW, imgH, 20);
             ctx.clip();
             ctx.drawImage(img, padding, y, imgW, imgH);
             ctx.restore();
 
-            // Gambar Sticker
-            ctx.font = "90px serif";
-            ctx.textAlign = "center"; 
-            ctx.textBaseline = "middle";
-            
-            const current = stickers[i];
-            ctx.fillText(current.s1, padding + current.p1.x, y + current.p1.y);
-            ctx.fillText(current.s2, padding + current.p2.x, y + current.p2.y);
+            // Gambar Emoji Stiker sesuai data (sticker.y sudah absolut dari y foto)
+            const currentStickers = stickerData[i];
+            currentStickers.stickers.forEach(sticker => {
+                const absoluteY = y + sticker.y;
+                drawStickerEmoji(ctx, sticker.emoji, sticker.x, absoluteY, sticker.size);
+            });
 
             loaded++;
             if(loaded === maxPhotos) {
@@ -181,10 +240,9 @@ function generateFinalCanvas() {
     });
 }
 
-// Event Listeners
+// Listeners
 startBtn.addEventListener('click', startPhotoSession);
 restartBtn.addEventListener('click', () => location.reload());
 downloadBtn.addEventListener('click', generateFinalCanvas);
 
-// Jalankan Kamera
 initCamera();
